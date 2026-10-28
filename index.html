@@ -12,9 +12,7 @@
   <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="preload" href="assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
   <script>document.documentElement.classList.add('js');</script>
 </head>
@@ -47,18 +45,22 @@
 
     <!-- ============ HERO ============ -->
     <section class="hero" id="top">
-      <figure class="hero__photo reveal">
-        <img src="assets/adam-halliday.jpg" width="640" height="800" alt="Portrait of Adam Halliday" fetchpriority="high">
+      <figure class="hero__photo">
+        <picture>
+          <source type="image/webp" sizes="(max-width: 700px) 132px, (max-width: 992px) 200px, 248px"
+                  srcset="assets/adam-halliday-320.webp 320w, assets/adam-halliday-480.webp 480w, assets/adam-halliday-640.webp 640w">
+          <img src="assets/adam-halliday.jpg" width="640" height="800" alt="Portrait of Adam Halliday" fetchpriority="high" decoding="async">
+        </picture>
       </figure>
-      <h1 class="hero__title reveal">
+      <h1 class="hero__title">
         <span class="hero__hello">Hey, my name is</span>
         <span class="hero__name">Adam Halliday</span>
       </h1>
-      <p class="hero__intro reveal">
+      <p class="hero__intro">
         I'm an Information Systems student at BYU's Marriott School of Business. I build and run the
         infrastructure, automation, and systems that keep organizations secure and efficient.
       </p>
-      <div class="hero__ctas reveal">
+      <div class="hero__ctas">
         <a class="key key--accent" data-key="enter" href="#projects"><span class="key__top"><span class="key__legend" aria-hidden="true">⏎ Enter</span><span class="key__label">See my work</span></span></a>
         <a class="key" href="#contact"><span class="key__top"><span class="key__legend" aria-hidden="true">in</span><span class="key__label">Get in touch</span></span></a>
       </div>
