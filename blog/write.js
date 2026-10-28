@@ -93,14 +93,24 @@
     return Array.isArray(list) ? list : [];
   }
 
+  // Label each GitHub call so a failure says exactly which step broke.
+  async function step(label, fn) {
+    try {
+      return await fn();
+    } catch (e) {
+      if (!e.step) e.step = label;
+      throw e;
+    }
+  }
+
   // Build one commit from a list of file changes, retrying once if the branch moved meanwhile.
   async function commitWith(build) {
     for (let attempt = 0; attempt < 2; attempt++) {
-      const ref = await gh(`/repos/${OWNER}/${REPO}/git/ref/heads/${BRANCH}`);
+      const ref = await step('reading the main branch', () => gh(`/repos/${OWNER}/${REPO}/git/ref/heads/${BRANCH}`));
       const head = ref.object.sha;
-      const { changes, message, result } = await build(head);
-      const base = await gh(`/repos/${OWNER}/${REPO}/git/commits/${head}`);
-      const tree = await gh(`/repos/${OWNER}/${REPO}/git/trees`, {
+      const { changes, message, result } = await step('reading the post list', () => build(head));
+      const base = await step('reading the latest commit', () => gh(`/repos/${OWNER}/${REPO}/git/commits/${head}`));
+      const tree = await step('saving the post files', () => gh(`/repos/${OWNER}/${REPO}/git/trees`, {
         method: 'POST',
         body: {
           base_tree: base.tree.sha,
@@ -108,14 +118,14 @@
             ? { path: c.path, mode: '100644', type: 'blob', sha: null }
             : { path: c.path, mode: '100644', type: 'blob', content: c.content })),
         },
-      });
-      const now = new Date().toISOString();
-      const commit = await gh(`/repos/${OWNER}/${REPO}/git/commits`, {
+      }));
+      // No dates: GitHub stamps the current time itself.
+      const commit = await step('creating the commit', () => gh(`/repos/${OWNER}/${REPO}/git/commits`, {
         method: 'POST',
-        body: { message, tree: tree.sha, parents: [head], author: { ...AUTHOR, date: now }, committer: { ...AUTHOR, date: now } },
-      });
+        body: { message, tree: tree.sha, parents: [head], author: { ...AUTHOR }, committer: { ...AUTHOR } },
+      }));
       try {
-        await gh(`/repos/${OWNER}/${REPO}/git/refs/heads/${BRANCH}`, { method: 'PATCH', body: { sha: commit.sha } });
+        await step('updating the main branch', () => gh(`/repos/${OWNER}/${REPO}/git/refs/heads/${BRANCH}`, { method: 'PATCH', body: { sha: commit.sha } }));
         return result;
       } catch (e) {
         if (attempt === 1 || e.status !== 422) throw e;
@@ -125,22 +135,24 @@
   }
 
   function explain(e) {
-    if (e.status === 401) return 'GitHub rejected the token (it may have expired or been revoked). Sign out and paste a new one.';
-    if (e.status === 403) return 'This token is not allowed to write to the repo. It needs "Contents: Read and write" on DuelMaster1000.github.io.';
-    if (e.status === 404) return 'The token cannot see the repo. Make sure it has access to DuelMaster1000.github.io.';
-    if (e instanceof TypeError) return 'Could not reach GitHub. Check your connection and try again.';
-    return `Something went wrong: ${e.message}`;
+    const where = e.step ? ` (while ${e.step})` : '';
+    const detail = e.status ? ` GitHub said: HTTP ${e.status}, "${e.message}".` : ` Details: ${e.message}`;
+    if (e.status === 401) return `GitHub rejected the token${where}; it may have expired or been revoked. Sign out and paste a new one.${detail}`;
+    if (e.status === 403) return `This token isn't allowed to do that${where}. It needs "Contents: Read and write" on DuelMaster1000.github.io.${detail}`;
+    if (e.status === 404) return `GitHub returned "not found"${where}. The token probably doesn't include the DuelMaster1000.github.io repository.${detail}`;
+    if (e instanceof TypeError) return `Could not reach GitHub${where}. Check your connection or any ad/script blocker, then try again. Details: ${e.message}`;
+    return `Publishing failed${where}.${detail}`;
   }
 
   /* ---------- sign in / out ---------- */
   async function verify(candidate) {
-    const user = await gh('/user', { auth: candidate });
+    const user = await step('checking whose token this is', () => gh('/user', { auth: candidate }));
     if (!user || user.login !== OWNER) {
       const err = new Error('This token belongs to a different GitHub account.');
       err.status = 0;
       throw err;
     }
-    await gh(`/repos/${OWNER}/${REPO}`, { auth: candidate });
+    await step('checking access to the repo', () => gh(`/repos/${OWNER}/${REPO}`, { auth: candidate }));
     return user;
   }
 
