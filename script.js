@@ -23,7 +23,9 @@
     });
   }, { rootMargin: '-40% 0px -55% 0px' });
   navAnchors.forEach((a) => {
-    const section = document.querySelector(a.getAttribute('href'));
+    const href = a.getAttribute('href');
+    if (!href.startsWith('#')) return; // links to other pages (e.g. the blog)
+    const section = document.querySelector(href);
     if (section) sectionObserver.observe(section);
   });
 

@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https: data:; connect-src https://api.github.com; base-uri 'self'; form-action 'self'; object-src 'none'">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <title>Write — Adam Halliday</title>
+  <meta name="theme-color" content="#e8e8e3">
+  <link rel="icon" href="../assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="blog.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="nav" id="nav">
+    <nav class="nav__inner container" aria-label="Primary">
+      <div class="nav__brand">
+        <a class="key key--mod key--sm" href="../" aria-label="Adam Halliday, home"><span class="key__top"><span class="key__legend" aria-hidden="true">Esc</span><span class="key__label">Home</span></span></a>
+      </div>
+      <ul class="nav__links" id="nav-links">
+        <li><a href="../#experience">Experience</a></li>
+        <li><a href="../#projects">Projects</a></li>
+        <li><a href="../#skills">Skills</a></li>
+        <li><a href="../#background">Background</a></li>
+        <li><a href="../#hobbies">Off the clock</a></li>
+        <li><a href="./" class="is-active">Blog</a></li>
+        <li><a href="../#contact">Contact</a></li>
+      </ul>
+      <a class="key key--mod key--sm" href="../assets/Adam-Halliday-Resume.pdf" target="_blank" rel="noopener"><span class="key__top"><span class="key__legend" aria-hidden="true">R</span><span class="key__label">Résumé ↓</span></span></a>
+      <button class="nav__toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <main id="main" class="container">
+    <header class="page-head">
+      <p class="section__no">Blog · Owner only</p>
+      <h1 class="section__title">Write a post</h1>
+      <p class="page-head__lede">Publishing requires Adam's GitHub access token. Without it, this page can't change anything.</p>
+    </header>
+
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+
+    <!-- ============ SIGN IN ============ -->
+    <section class="panel" id="signin" aria-labelledby="signin-title">
+      <h2 class="panel__title" id="signin-title">Sign in with a GitHub token</h2>
+      <p class="panel__note">Create the token once, then paste it here. It stays in this browser only and is sent only to GitHub.</p>
+      <ol class="steps">
+        <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub → Fine-grained token → Generate new token</a>.</li>
+        <li>Name it <code>Blog editor</code> and pick an expiration (up to a year).</li>
+        <li>Repository access: <strong>Only select repositories</strong> → <code>DuelMaster1000.github.io</code>.</li>
+        <li>Permissions → Repository permissions → <strong>Contents: Read and write</strong>. Leave everything else as is.</li>
+        <li>Generate, copy the token, and paste it below.</li>
+      </ol>
+      <form id="signin-form" autocomplete="off">
+        <div class="field">
+          <label for="token">Access token</label>
+          <input id="token" type="password" autocomplete="off" spellcheck="false" autocapitalize="off" placeholder="github_pat_…" required>
+        </div>
+        <label class="check"><input type="checkbox" id="remember"> Remember on this device (only on a computer you trust)</label>
+        <div class="actions">
+          <button type="submit" class="key key--accent"><span class="key__top"><span class="key__legend" aria-hidden="true">⏎ Enter</span><span class="key__label">Sign in</span></span></button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ============ EDITOR ============ -->
+    <div id="editor" hidden>
+      <section class="panel" aria-labelledby="mine-title">
+        <h2 class="panel__title" id="mine-title">Your posts</h2>
+        <div class="who">Signed in as <strong id="who-name"></strong>
+          <button type="button" class="key key--mod key--sm" id="signout"><span class="key__top"><span class="key__legend" aria-hidden="true">Esc</span><span class="key__label">Sign out</span></span></button>
+        </div>
+        <ul class="mine" id="my-posts"></ul>
+        <div class="actions">
+          <button type="button" class="key key--sm" id="new-post"><span class="key__top"><span class="key__legend" aria-hidden="true">+</span><span class="key__label">New post</span></span></button>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="editing-label">
+        <h2 class="panel__title" id="editing-label">New post</h2>
+
+        <div class="field">
+          <label for="title">Title</label>
+          <input id="title" type="text" maxlength="140" placeholder="What's this post about?">
+        </div>
+        <div class="field field--row">
+          <div>
+            <label for="summary">Summary (optional, shown in the post list)</label>
+            <input id="summary" type="text" maxlength="240" placeholder="One sentence teaser">
+          </div>
+          <div>
+            <label for="date">Date</label>
+            <input id="date" type="date">
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label-like" id="body-label">Post</span>
+          <div class="toolbar" id="toolbar" role="toolbar" aria-label="Formatting">
+            <button type="button" class="key key--sm" data-action="bold" title="Bold (Ctrl+B)"><span class="key__top"><span class="key__legend" aria-hidden="true">B</span><span class="key__label">Bold</span></span></button>
+            <button type="button" class="key key--sm" data-action="italic" title="Italic (Ctrl+I)"><span class="key__top"><span class="key__legend" aria-hidden="true">I</span><span class="key__label">Italic</span></span></button>
+            <button type="button" class="key key--sm" data-action="h2" title="Heading"><span class="key__top"><span class="key__legend" aria-hidden="true">H2</span><span class="key__label">Heading</span></span></button>
+            <button type="button" class="key key--sm" data-action="h3" title="Subheading"><span class="key__top"><span class="key__legend" aria-hidden="true">H3</span><span class="key__label">Subheading</span></span></button>
+            <button type="button" class="key key--sm" data-action="ul" title="Bullet list"><span class="key__top"><span class="key__legend" aria-hidden="true">•</span><span class="key__label">List</span></span></button>
+            <button type="button" class="key key--sm" data-action="ol" title="Numbered list"><span class="key__top"><span class="key__legend" aria-hidden="true">1.</span><span class="key__label">Numbered</span></span></button>
+            <button type="button" class="key key--sm" data-action="quote" title="Quote"><span class="key__top"><span class="key__legend" aria-hidden="true">&gt;</span><span class="key__label">Quote</span></span></button>
+            <button type="button" class="key key--sm" data-action="code" title="Code"><span class="key__top"><span class="key__legend" aria-hidden="true">`</span><span class="key__label">Code</span></span></button>
+            <button type="button" class="key key--sm" data-action="link" title="Link (Ctrl+K)"><span class="key__top"><span class="key__legend" aria-hidden="true">↗</span><span class="key__label">Link</span></span></button>
+            <button type="button" class="key key--sm" data-action="image" title="Image (https URL)"><span class="key__top"><span class="key__legend" aria-hidden="true">▣</span><span class="key__label">Image</span></span></button>
+            <button type="button" class="key key--sm" data-action="hr" title="Divider"><span class="key__top"><span class="key__legend" aria-hidden="true">—</span><span class="key__label">Divider</span></span></button>
+          </div>
+          <textarea id="body" aria-labelledby="body-label" spellcheck="true" placeholder="Start writing… Select text and use the buttons above to format it."></textarea>
+          <p class="cheatsheet">**bold** · *italic* · ## Heading · ### Subheading · - list · 1. numbered · &gt; quote · `code` · [text](https://…) · ![alt](https://…) · --- divider · ``` code block ```</p>
+        </div>
+
+        <div class="field">
+          <span class="label-like">Live preview</span>
+          <div class="preview" id="preview" aria-live="off"></div>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="key key--accent" id="publish"><span class="key__top"><span class="key__legend" aria-hidden="true">⏎ Enter</span><span class="key__label">Publish</span></span></button>
+          <button type="button" class="key key--mod" id="delete" hidden><span class="key__top"><span class="key__legend" aria-hidden="true">Del</span><span class="key__label">Delete post</span></span></button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer container">
+    <p>© <span id="year">2026</span> Adam H. Halliday</p>
+  </footer>
+
+  <script src="../script.js"></script>
+  <script src="markdown.js"></script>
+  <script src="write.js"></script>
+</body>
+</html>

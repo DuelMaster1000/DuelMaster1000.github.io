@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https: data:; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
+  <title>Blog — Adam Halliday</title>
+  <meta name="theme-color" content="#e8e8e3">
+  <link rel="icon" href="../assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="blog.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="nav" id="nav">
+    <nav class="nav__inner container" aria-label="Primary">
+      <div class="nav__brand">
+        <a class="key key--mod key--sm" href="../" aria-label="Adam Halliday, home"><span class="key__top"><span class="key__legend" aria-hidden="true">Esc</span><span class="key__label">Home</span></span></a>
+      </div>
+      <ul class="nav__links" id="nav-links">
+        <li><a href="../#experience">Experience</a></li>
+        <li><a href="../#projects">Projects</a></li>
+        <li><a href="../#skills">Skills</a></li>
+        <li><a href="../#background">Background</a></li>
+        <li><a href="../#hobbies">Off the clock</a></li>
+        <li><a href="./" class="is-active">Blog</a></li>
+        <li><a href="../#contact">Contact</a></li>
+      </ul>
+      <a class="key key--mod key--sm" data-key="r" href="../assets/Adam-Halliday-Resume.pdf" target="_blank" rel="noopener"><span class="key__top"><span class="key__legend" aria-hidden="true">R</span><span class="key__label">Résumé ↓</span></span></a>
+      <button class="nav__toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <main id="main" class="container">
+    <article class="post">
+      <a class="key key--sm post__back" href="./"><span class="key__top"><span class="key__legend" aria-hidden="true">←</span><span class="key__label">All posts</span></span></a>
+      <p class="meta" id="post-date"></p>
+      <h1 class="post__title" id="post-title">Loading…</h1>
+      <p class="post__summary" id="post-summary" hidden></p>
+      <hr class="post__rule">
+      <div class="prose" id="post-body"></div>
+    </article>
+  </main>
+
+  <footer class="footer container">
+    <p>© <span id="year">2026</span> Adam H. Halliday</p>
+  </footer>
+
+  <script src="../script.js"></script>
+  <script src="markdown.js"></script>
+  <script src="blog.js"></script>
+</body>
+</html>
